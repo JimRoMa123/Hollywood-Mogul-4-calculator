@@ -47,11 +47,18 @@ cd calculadoraSofi
 
 ### 2. Configurar variables de entorno
 
-Copia los archivos de ejemplo y ajusta los valores si es necesario:
+Copia los archivos de ejemplo según tu sistema operativo y terminal:
 
+**En Linux/macOS o Windows (PowerShell):**
 ```bash
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
+```
+
+**En Windows (CMD / Símbolo del sistema):**
+```cmd
+copy backend\.env.example backend\.env
+copy frontend\.env.example frontend\.env
 ```
 
 > 💡 Los valores por defecto ya están configurados para funcionar con Docker Compose sin cambios.
@@ -121,12 +128,16 @@ CREATE DATABASE hm4_calculator OWNER sofi;
 
 Copia los archivos `.env.example` y ajusta los valores según tu entorno:
 
+**En Linux/macOS o Windows (PowerShell):**
 ```bash
-# Backend
 cp backend/.env.example backend/.env
-
-# Frontend
 cp frontend/.env.example frontend/.env
+```
+
+**En Windows (CMD / Símbolo del sistema):**
+```cmd
+copy backend\.env.example backend\.env
+copy frontend\.env.example frontend\.env
 ```
 
 Edita `backend/.env` para que coincida con tu configuración de PostgreSQL:
