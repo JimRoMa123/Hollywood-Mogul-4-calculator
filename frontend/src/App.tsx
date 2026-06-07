@@ -59,7 +59,7 @@ function App() {
       const res = await calculateMovie(form);
       setResult(res);
       setStep(6); // results view
-    } catch (e: any) {
+    } catch (e) {
       setError('Error al conectar con el servidor. ¿Está corriendo el backend en puerto 3001?');
       console.error(e);
     } finally {

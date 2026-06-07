@@ -11,9 +11,11 @@ export class VolatilityEngine {
     lightningInBottle: boolean;
     bankruptcyRisk: boolean;
   } {
-    const avgHumility = dto.castData.length > 0
-      ? dto.castData.reduce((acc, c) => acc + c.humility, 0) / dto.castData.length
-      : 50;
+    const avgHumility =
+      dto.castData.length > 0
+        ? dto.castData.reduce((acc, c) => acc + c.humility, 0) /
+          dto.castData.length
+        : 50;
 
     // ── 1. Creative conflict tension (§4.3)
     const tension = Math.abs(dto.dirPerfectionism - avgHumility);
@@ -24,7 +26,8 @@ export class VolatilityEngine {
 
     // ── 3. Environmental chaos (§6.1)
     const chaosBase = dto.hasAdditionalVillains ? 25 : 0;
-    const contingencyRatio = (dto.studioCash - dto.budget - dto.marketingBudget) / dto.budget;
+    const contingencyRatio =
+      (dto.studioCash - dto.budget - dto.marketingBudget) / dto.budget;
     const bankruptcyRisk = dto.hasAdditionalVillains && contingencyRatio < 0.15;
     const chaosAmplifier = bankruptcyRisk ? 40 : chaosBase;
 
@@ -33,18 +36,25 @@ export class VolatilityEngine {
 
     // ── 5. VFX risk: high VFX % with low director effects skill
     const totalVfxPct = dto.vfxBudgetPct + dto.creatureFxPct;
-    const vfxRisk = totalVfxPct > 25 && dto.dirEffects < 50
-      ? (totalVfxPct - 25) * 0.6
-      : 0;
+    const vfxRisk =
+      totalVfxPct > 25 && dto.dirEffects < 50 ? (totalVfxPct - 25) * 0.6 : 0;
 
     // ── 6. Director on-budget = risk mitigation
     const budgetMitigation = (dto.dirOnBudget / 100) * 15;
 
     // ── 7. Franchise stability
-    const franchiseStability = dto.franchiseMode ? -(dto.franchiseMomentum || 0) * 0.1 : 0;
+    const franchiseStability = dto.franchiseMode
+      ? -(dto.franchiseMomentum || 0) * 0.1
+      : 0;
 
     // ── Base VRC (higher = more volatile/risky)
-    let vrcBase = (tension * 0.3) + chaosAmplifier + nudityInstability + vfxRisk - budgetMitigation + franchiseStability;
+    let vrcBase =
+      tension * 0.3 +
+      chaosAmplifier +
+      nudityInstability +
+      vfxRisk -
+      budgetMitigation +
+      franchiseStability;
 
     vrcBase = Math.min(Math.max(vrcBase, 0), 100);
 

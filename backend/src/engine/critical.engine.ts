@@ -4,18 +4,27 @@ import { TECHNICAL_GENRES, AWARDS_FRIENDLY_GENRES } from './financial.engine';
 
 @Injectable()
 export class CriticalEngine {
-  calculate(dto: CalculateMovieDto): { iab: number; criticalBreakdown: Record<string, number> } {
-    const avgHumility = dto.castData.length > 0
-      ? dto.castData.reduce((acc, c) => acc + c.humility, 0) / dto.castData.length
-      : 50;
+  calculate(dto: CalculateMovieDto): {
+    iab: number;
+    criticalBreakdown: Record<string, number>;
+  } {
+    const avgHumility =
+      dto.castData.length > 0
+        ? dto.castData.reduce((acc, c) => acc + c.humility, 0) /
+          dto.castData.length
+        : 50;
 
-    const avgSexAppeal = dto.castData.length > 0
-      ? dto.castData.reduce((acc, c) => acc + c.sexAppeal, 0) / dto.castData.length
-      : 50;
+    const avgSexAppeal =
+      dto.castData.length > 0
+        ? dto.castData.reduce((acc, c) => acc + c.sexAppeal, 0) /
+          dto.castData.length
+        : 50;
 
-    const avgScreenPresence = dto.castData.length > 0
-      ? dto.castData.reduce((acc, c) => acc + c.screenPresence, 0) / dto.castData.length
-      : 50;
+    const avgScreenPresence =
+      dto.castData.length > 0
+        ? dto.castData.reduce((acc, c) => acc + c.screenPresence, 0) /
+          dto.castData.length
+        : 50;
 
     // ── 1. Script quality score (§3.1)
     // High pace + plotTwists + subplots BUT director needs high perfectionism
@@ -27,7 +36,7 @@ export class CriticalEngine {
     } else {
       // Director can't handle the complexity
       const gap = scriptComplexity - directorCapacity;
-      scriptScore = Math.max(0, (scriptComplexity / 100) * 25 - (gap * 0.4));
+      scriptScore = Math.max(0, (scriptComplexity / 100) * 25 - gap * 0.4);
     }
 
     // ── 2. Character development vs Screen Presence (§4.1, §3.1)
@@ -40,9 +49,8 @@ export class CriticalEngine {
 
     // ── 4. Sex Appeal penalty for critical reception (§8.1)
     // High Sex Appeal + low Humility = critics hate it
-    const sexAppealPenalty = avgSexAppeal > 70 && avgHumility < 40
-      ? -(avgSexAppeal - 70) * 0.3
-      : 0;
+    const sexAppealPenalty =
+      avgSexAppeal > 70 && avgHumility < 40 ? -(avgSexAppeal - 70) * 0.3 : 0;
 
     // ── 5. Genre awards affinity (§8.2)
     let genreAwardsBonus = 0;
@@ -53,9 +61,12 @@ export class CriticalEngine {
     }
 
     // ── 6. Script fidelity: requires good source material
-    const scriptFidelityScore = dto.dirScriptFidelity > 70
-      ? (dto.dirScriptFidelity / 100) * ((dto.charDevelopment + dto.pace) / 200) * 10
-      : (dto.dirScriptFidelity / 100) * 5;
+    const scriptFidelityScore =
+      dto.dirScriptFidelity > 70
+        ? (dto.dirScriptFidelity / 100) *
+          ((dto.charDevelopment + dto.pace) / 200) *
+          10
+        : (dto.dirScriptFidelity / 100) * 5;
 
     // ── 7. VFX waste check for critics (§3.2, §4.2)
     const totalVfxPct = dto.vfxBudgetPct + dto.creatureFxPct;
@@ -65,10 +76,12 @@ export class CriticalEngine {
     }
 
     // ── 8. Nudity: R-rating can help or hurt depending on genre
-    const nudityModifier = dto.hasNudity && !AWARDS_FRIENDLY_GENRES.includes(dto.genre) ? -5 : 0;
+    const nudityModifier =
+      dto.hasNudity && !AWARDS_FRIENDLY_GENRES.includes(dto.genre) ? -5 : 0;
 
     // ── 9. Franchise bias
-    const franchiseBias = dto.franchiseMode && (dto.franchiseMomentum || 0) > 70 ? -10 : 0; // Critics dislike franchise fatigue
+    const franchiseBias =
+      dto.franchiseMode && (dto.franchiseMomentum || 0) > 70 ? -10 : 0; // Critics dislike franchise fatigue
 
     const criticalBreakdown = {
       scriptQuality: Math.round(scriptScore * 10) / 10,
@@ -78,9 +91,16 @@ export class CriticalEngine {
       castSubstance: Math.round((100 - avgSexAppeal + avgScreenPresence) / 4),
     };
 
-    let iab = scriptScore + characterScore + perfectionismScore + sexAppealPenalty +
-              genreAwardsBonus + scriptFidelityScore + vfxCriticalPenalty +
-              nudityModifier + franchiseBias;
+    let iab =
+      scriptScore +
+      characterScore +
+      perfectionismScore +
+      sexAppealPenalty +
+      genreAwardsBonus +
+      scriptFidelityScore +
+      vfxCriticalPenalty +
+      nudityModifier +
+      franchiseBias;
 
     iab = Math.min(Math.max(iab, 0), 100);
 

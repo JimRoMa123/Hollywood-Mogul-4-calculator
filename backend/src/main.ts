@@ -29,4 +29,4 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`🎬 HM4 Calculator API running on http://localhost:${port}/api`);
 }
-bootstrap();
+bootstrap().catch((err) => console.error(err));

@@ -6,22 +6,32 @@ export const HistoryList: React.FC = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
   useEffect(() => {
-    loadHistory();
-  }, []);
+    let active = true;
 
-  const loadHistory = async () => {
-    try {
-      setLoading(true);
-      const data = await getHistory();
-      setHistory(data);
-    } catch (e) {
-      setError('No se pudo cargar el historial. ¿El backend está corriendo?');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const loadHistory = async () => {
+      try {
+        const data = await getHistory();
+        if (active) {
+          setHistory(data);
+        }
+      } catch {
+        if (active) {
+          setError('No se pudo cargar el historial. ¿El backend está corriendo?');
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadHistory();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleDelete = async (id: string) => {
     await deleteHistory(id);
