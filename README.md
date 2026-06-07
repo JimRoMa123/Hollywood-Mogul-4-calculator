@@ -41,7 +41,7 @@ Esta es la forma más sencilla de levantar todo el proyecto. Un solo comando ini
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/JimRoMa123/Hollywood-Mogul-4-calculator.git
 cd calculadoraSofi
 ```
 
@@ -98,7 +98,7 @@ Usa esta opción si deseas trabajar en el código con recarga en caliente (hot-r
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/JimRoMa123/Hollywood-Mogul-4-calculator.git
 cd calculadoraSofi
 ```
 
