@@ -9,30 +9,51 @@ interface SliderProps {
   onChange: (val: number) => void;
   id: string;
   tooltip?: string;
+  isStars?: boolean;
 }
 
+const renderStarsText = (rating: number) => {
+  const fullStars = Math.floor(rating);
+  const hasHalf = rating % 1 !== 0;
+  const starsStr = '★'.repeat(fullStars) + (hasHalf ? '½' : '');
+  return `${starsStr} (${rating.toFixed(1)} / 5)`;
+};
+
 export const Slider: React.FC<SliderProps> = ({
-  label, hint, value, min = 1, max = 100, onChange, id, tooltip
-}) => (
-  <div className="slider-group">
-    <div className="slider-label-row">
-      <label htmlFor={id} style={{ fontSize: '0.82rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
-        {label}
-        {hint && <span className="label-hint">{hint}</span>}
-      </label>
-      <span className="slider-value">{value}</span>
+  label, hint, value, min, max, onChange, id, tooltip, isStars = false,
+}) => {
+  const displayValue = isStars ? value / 20 : value;
+  const rangeMin = isStars ? 0.5 : (min !== undefined ? min : 1);
+  const rangeMax = isStars ? 5.0 : (max !== undefined ? max : 100);
+  const rangeStep = isStars ? 0.5 : 1;
+
+  return (
+    <div className="slider-group">
+      <div className="slider-label-row">
+        <label htmlFor={id} style={{ fontSize: '0.82rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
+          {label}
+          {hint && <span className="label-hint">{hint}</span>}
+        </label>
+        <span className="slider-value" style={{ color: isStars ? 'var(--gold)' : 'var(--text-primary)' }}>
+          {isStars ? renderStarsText(displayValue) : `${displayValue}%`}
+        </span>
+      </div>
+      <input
+        id={id}
+        type="range"
+        min={rangeMin}
+        max={rangeMax}
+        step={rangeStep}
+        value={displayValue}
+        onChange={(e) => {
+          const rawVal = Number(e.target.value);
+          onChange(isStars ? Math.round(rawVal * 20) : rawVal);
+        }}
+      />
+      {tooltip && <div className="input-tooltip-text" style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px', lineHeight: '1.4' }}>{tooltip}</div>}
     </div>
-    <input
-      id={id}
-      type="range"
-      min={min}
-      max={max}
-      value={value}
-      onChange={(e) => onChange(Number(e.target.value))}
-    />
-    {tooltip && <div className="input-tooltip-text" style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px', lineHeight: '1.4' }}>{tooltip}</div>}
-  </div>
-);
+  );
+};
 
 interface MoneyInputProps {
   label: string;

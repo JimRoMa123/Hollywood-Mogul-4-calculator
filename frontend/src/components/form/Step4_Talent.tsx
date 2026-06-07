@@ -57,19 +57,19 @@ export const Step4Talent: React.FC<Props> = ({ data, onChange, onNext, onBack })
           <Slider id="dirPerfectionism" label="Perfeccionismo"
             hint=" — define el techo de calidad artística"
             value={data.dirPerfectionism} onChange={(v) => onChange({ dirPerfectionism: v })}
-            tooltip="Establece el límite superior de calidad crítica. Genera roces con actores de baja Humildad." />
+            tooltip="Establece el límite superior de calidad crítica. Genera roces con actores de baja Humildad." isStars />
           <Slider id="dirScriptFidelity" label="Fidelidad al Guion (Script As Written)"
             hint=" — adherencia literal al libreto"
             value={data.dirScriptFidelity} onChange={(v) => onChange({ dirScriptFidelity: v })}
-            tooltip="Adherencia al texto. Si el guion es bueno, un valor alto asegura trasladar esa calidad." />
+            tooltip="Adherencia al texto. Si el guion es bueno, un valor alto asegura trasladar esa calidad." isStars />
           <Slider id="dirOnBudget" label="Gestión de Presupuesto (On-Budget)"
             hint=" — austeridad y control de costos"
             value={data.dirOnBudget} onChange={(v) => onChange({ dirOnBudget: v })}
-            tooltip="Habilidad para controlar gastos. Amortigua pérdidas ante eventos aleatorios." />
+            tooltip="Habilidad para controlar gastos. Amortigua pérdidas ante eventos aleatorios." isStars />
           <Slider id="dirEffects" label="Manejo de Efectos (Effects)"
             hint=" — competencia en VFX y animación"
             value={data.dirEffects} onChange={(v) => onChange({ dirEffects: v })}
-            tooltip="Manejo de efectos especiales. Obligatorio si el budget de VFX es alto." />
+            tooltip="Manejo de efectos especiales. Obligatorio si el budget de VFX es alto." isStars />
         </div>
       </div>
 
@@ -87,7 +87,7 @@ export const Step4Talent: React.FC<Props> = ({ data, onChange, onNext, onBack })
              tension > 40 ? '⚠️ Conflicto director-elenco moderado' :
              '✅ Buena alineación director-elenco'}
           </span>
-          <span style={{ fontWeight: 700, fontSize: '1rem' }}>Tensión: {tension}</span>
+          <span style={{ fontWeight: 700, fontSize: '1rem' }}>Tensión: {(tension / 20).toFixed(1)} ★</span>
         </div>
       )}
 
@@ -127,15 +127,15 @@ export const Step4Talent: React.FC<Props> = ({ data, onChange, onNext, onBack })
             <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
               <Slider id={`sexAppeal-${index}`} label="Sex Appeal" hint=" — impacto taquillero"
                 value={member.sexAppeal} onChange={(v) => updateCast(index, { sexAppeal: v })}
-                tooltip="Eleva el hype publicitario e ingresos de taquilla, pero los críticos pueden rechazar repartos sin humildad." />
+                tooltip="Eleva el hype publicitario e ingresos de taquilla, pero los críticos pueden rechazar repartos sin humildad." isStars />
               <Slider id={`screenPresence-${index}`} label="Presencia en Pantalla"
                 hint=" — gravitas crítica"
                 value={member.screenPresence} onChange={(v) => updateCast(index, { screenPresence: v })}
-                tooltip="Mide el carisma crítico. Multiplicador de calidad que compensa fallos del libreto." />
+                tooltip="Mide el carisma crítico. Multiplicador de calidad que compensa fallos del libreto." isStars />
               <Slider id={`humility-${index}`} label="Humildad"
                 hint=" — colaboración y gestión de ego"
                 value={member.humility} onChange={(v) => updateCast(index, { humility: v })}
-                tooltip="Ego del actor. Valores bajos causan retrasos y sobrecostos por tensión con el director." />
+                tooltip="Ego del actor. Valores bajos causan retrasos y sobrecostos por tensión con el director." isStars />
             </div>
             {member.salary < 100000 && member.screenPresence > 75 && (
               <div style={{
