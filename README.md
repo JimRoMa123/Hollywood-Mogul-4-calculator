@@ -47,16 +47,18 @@ cd calculadoraSofi
 
 ### 2. Configurar variables de entorno
 
-Copia los archivos de ejemplo según tu sistema operativo y terminal:
+Copia los archivos de ejemplo (incluido el de la raíz para Docker) según tu sistema operativo y terminal:
 
 **En Linux/macOS o Windows (PowerShell):**
 ```bash
+cp .env.example .env
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
 
 **En Windows (CMD / Símbolo del sistema):**
 ```cmd
+copy .env.example .env
 copy backend\.env.example backend\.env
 copy frontend\.env.example frontend\.env
 ```
@@ -193,9 +195,19 @@ El frontend estará disponible en `http://localhost:5173`.
 
 ## 🔑 Variables de Entorno
 
-El proyecto incluye archivos `.env.example` en cada módulo. Copia estos archivos como `.env` y ajusta los valores según tu entorno.
+El proyecto incluye archivos `.env.example` en la raíz y en cada módulo. Copia estos archivos como `.env` y ajusta los valores según tu entorno.
 
-### Backend (`backend/.env`)
+### Raíz (`.env` - Usado por Docker Compose)
+
+| Variable           | Descripción                                  | Valor por defecto  |
+|--------------------|----------------------------------------------|--------------------|
+| `DB_USERNAME`      | Usuario de PostgreSQL                        | `sofi`             |
+| `DB_PASSWORD`      | Contraseña de PostgreSQL                     | `hollywood2024`    |
+| `DB_DATABASE`      | Base de datos de PostgreSQL                  | `hm4_calculator`   |
+| `PGADMIN_EMAIL`    | Email de acceso a pgAdmin                    | `admin@hm4.com`    |
+| `PGADMIN_PASSWORD` | Contraseña de acceso a pgAdmin               | `admin`            |
+
+### Backend (`backend/.env` - Usado para desarrollo manual)
 
 | Variable      | Descripción                        | Valor por defecto  |
 |---------------|------------------------------------|--------------------|
@@ -226,6 +238,7 @@ El proyecto incluye archivos `.env.example` en cada módulo. Copia estos archivo
 ```
 calculadoraSofi/
 ├── docker-compose.yml        # Orquestación de todos los servicios
+├── .env.example              # Variables de entorno raíz para Docker
 ├── backend/                  # API REST con NestJS
 │   ├── src/
 │   │   ├── calculator/       # Módulo de cálculos
