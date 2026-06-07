@@ -41,6 +41,7 @@ export const Step1Finances: React.FC<Props> = ({ data, onChange, onNext }) => {
           hint=" (liquidez disponible)"
           value={data.studioCash}
           onChange={(v) => onChange({ studioCash: v })}
+          tooltip="Reserva de contingencia para mitigar sobrecostos."
         />
         <MoneyInput
           id="budget"
@@ -48,6 +49,7 @@ export const Step1Finances: React.FC<Props> = ({ data, onChange, onNext }) => {
           hint=" (budget de la película)"
           value={data.budget}
           onChange={(v) => onChange({ budget: v })}
+          tooltip="Aumenta el techo de taquilla pero requiere liquidez."
         />
         <MoneyInput
           id="marketingBudget"
@@ -55,6 +57,7 @@ export const Step1Finances: React.FC<Props> = ({ data, onChange, onNext }) => {
           hint=" (campaña publicitaria)"
           value={data.marketingBudget}
           onChange={(v) => onChange({ marketingBudget: v })}
+          tooltip="Óptimo: 20% del budget. Evita gastar en exceso (saturación)."
         />
       </div>
 

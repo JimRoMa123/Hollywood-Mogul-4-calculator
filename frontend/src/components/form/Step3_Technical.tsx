@@ -39,17 +39,21 @@ export const Step3Technical: React.FC<Props> = ({ data, onChange, onNext, onBack
         <div>
           <Slider id="vfxBudgetPct" label="Efectos Visuales (VFX) %"
             hint={` = $${(data.budget * data.vfxBudgetPct / 100 / 1e6).toFixed(1)}M`}
-            value={data.vfxBudgetPct} min={0} onChange={(v) => onChange({ vfxBudgetPct: v })} />
+            value={data.vfxBudgetPct} min={0} onChange={(v) => onChange({ vfxBudgetPct: v })}
+            tooltip="Porcentaje de efectos visuales. Exige un director con alto Manejo de Efectos para no desperdiciarlo." />
         </div>
         <Slider id="creatureFxPct" label="Efectos de Criaturas (Creature FX) %"
           hint={` = $${(data.budget * data.creatureFxPct / 100 / 1e6).toFixed(1)}M`}
-          value={data.creatureFxPct} min={0} onChange={(v) => onChange({ creatureFxPct: v })} />
+          value={data.creatureFxPct} min={0} onChange={(v) => onChange({ creatureFxPct: v })}
+          tooltip="Especializado para fantasía/ciencia ficción. Requiere director con buen Manejo de Efectos." />
         <Slider id="stuntsPct" label="Acrobacias (Stunts) %"
           hint={` = $${(data.budget * data.stuntsPct / 100 / 1e6).toFixed(1)}M`}
-          value={data.stuntsPct} min={0} onChange={(v) => onChange({ stuntsPct: v })} />
+          value={data.stuntsPct} min={0} onChange={(v) => onChange({ stuntsPct: v })}
+          tooltip="Esencial para géneros de acción, terror o suspenso." />
         <Slider id="setDesignPct" label="Diseño de Producción (Set Design) %"
           hint={` = $${(data.budget * data.setDesignPct / 100 / 1e6).toFixed(1)}M`}
-          value={data.setDesignPct} min={0} onChange={(v) => onChange({ setDesignPct: v })} />
+          value={data.setDesignPct} min={0} onChange={(v) => onChange({ setDesignPct: v })}
+          tooltip="Diseño de sets. Debe mantener relación de escala con el Alcance de la Historia (Story Scope)." />
       </div>
 
       <div style={{

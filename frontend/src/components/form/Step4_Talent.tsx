@@ -56,16 +56,20 @@ export const Step4Talent: React.FC<Props> = ({ data, onChange, onNext, onBack })
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <Slider id="dirPerfectionism" label="Perfeccionismo"
             hint=" — define el techo de calidad artística"
-            value={data.dirPerfectionism} onChange={(v) => onChange({ dirPerfectionism: v })} />
+            value={data.dirPerfectionism} onChange={(v) => onChange({ dirPerfectionism: v })}
+            tooltip="Establece el límite superior de calidad crítica. Genera roces con actores de baja Humildad." />
           <Slider id="dirScriptFidelity" label="Fidelidad al Guion (Script As Written)"
             hint=" — adherencia literal al libreto"
-            value={data.dirScriptFidelity} onChange={(v) => onChange({ dirScriptFidelity: v })} />
+            value={data.dirScriptFidelity} onChange={(v) => onChange({ dirScriptFidelity: v })}
+            tooltip="Adherencia al texto. Si el guion es bueno, un valor alto asegura trasladar esa calidad." />
           <Slider id="dirOnBudget" label="Gestión de Presupuesto (On-Budget)"
             hint=" — austeridad y control de costos"
-            value={data.dirOnBudget} onChange={(v) => onChange({ dirOnBudget: v })} />
+            value={data.dirOnBudget} onChange={(v) => onChange({ dirOnBudget: v })}
+            tooltip="Habilidad para controlar gastos. Amortigua pérdidas ante eventos aleatorios." />
           <Slider id="dirEffects" label="Manejo de Efectos (Effects)"
             hint=" — competencia en VFX y animación"
-            value={data.dirEffects} onChange={(v) => onChange({ dirEffects: v })} />
+            value={data.dirEffects} onChange={(v) => onChange({ dirEffects: v })}
+            tooltip="Manejo de efectos especiales. Obligatorio si el budget de VFX es alto." />
         </div>
       </div>
 
@@ -117,17 +121,21 @@ export const Step4Talent: React.FC<Props> = ({ data, onChange, onNext, onBack })
             </div>
             <div style={{ marginTop: 12 }}>
               <MoneyInput id={`salary-${index}`} label="Salario" value={member.salary}
-                onChange={(v) => updateCast(index, { salary: v })} />
+                onChange={(v) => updateCast(index, { salary: v })}
+                tooltip="Salario base exigido. Afecta directamente al presupuesto." />
             </div>
             <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
               <Slider id={`sexAppeal-${index}`} label="Sex Appeal" hint=" — impacto taquillero"
-                value={member.sexAppeal} onChange={(v) => updateCast(index, { sexAppeal: v })} />
+                value={member.sexAppeal} onChange={(v) => updateCast(index, { sexAppeal: v })}
+                tooltip="Eleva el hype publicitario e ingresos de taquilla, pero los críticos pueden rechazar repartos sin humildad." />
               <Slider id={`screenPresence-${index}`} label="Presencia en Pantalla"
                 hint=" — gravitas crítica"
-                value={member.screenPresence} onChange={(v) => updateCast(index, { screenPresence: v })} />
+                value={member.screenPresence} onChange={(v) => updateCast(index, { screenPresence: v })}
+                tooltip="Mide el carisma crítico. Multiplicador de calidad que compensa fallos del libreto." />
               <Slider id={`humility-${index}`} label="Humildad"
                 hint=" — colaboración y gestión de ego"
-                value={member.humility} onChange={(v) => updateCast(index, { humility: v })} />
+                value={member.humility} onChange={(v) => updateCast(index, { humility: v })}
+                tooltip="Ego del actor. Valores bajos causan retrasos y sobrecostos por tensión con el director." />
             </div>
             {member.salary < 100000 && member.screenPresence > 75 && (
               <div style={{

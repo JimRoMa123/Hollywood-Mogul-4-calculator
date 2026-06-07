@@ -8,10 +8,11 @@ interface SliderProps {
   max?: number;
   onChange: (val: number) => void;
   id: string;
+  tooltip?: string;
 }
 
 export const Slider: React.FC<SliderProps> = ({
-  label, hint, value, min = 1, max = 100, onChange, id,
+  label, hint, value, min = 1, max = 100, onChange, id, tooltip
 }) => (
   <div className="slider-group">
     <div className="slider-label-row">
@@ -29,6 +30,7 @@ export const Slider: React.FC<SliderProps> = ({
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
     />
+    {tooltip && <div className="input-tooltip-text" style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px', lineHeight: '1.4' }}>{tooltip}</div>}
   </div>
 );
 
@@ -38,9 +40,10 @@ interface MoneyInputProps {
   value: number;
   onChange: (val: number) => void;
   id: string;
+  tooltip?: string;
 }
 
-export const MoneyInput: React.FC<MoneyInputProps> = ({ label, hint, value, onChange, id }) => (
+export const MoneyInput: React.FC<MoneyInputProps> = ({ label, hint, value, onChange, id, tooltip }) => (
   <div className="form-group">
     <label htmlFor={id}>
       {label}
@@ -61,11 +64,14 @@ export const MoneyInput: React.FC<MoneyInputProps> = ({ label, hint, value, onCh
         placeholder="0"
       />
     </div>
-    {value > 0 && (
-      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-        = ${(value / 1e6).toFixed(1)}M USD
-      </span>
-    )}
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2px' }}>
+      {value > 0 && (
+        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+          = ${(value / 1e6).toFixed(1)}M USD
+        </span>
+      )}
+      {tooltip && <span className="input-tooltip-text" style={{ fontSize: '0.74rem', color: 'var(--text-muted)', lineHeight: '1.4', textAlign: 'right', marginLeft: 'auto' }}>{tooltip}</span>}
+    </div>
   </div>
 );
 

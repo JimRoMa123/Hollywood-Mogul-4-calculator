@@ -53,15 +53,20 @@ export const Step2Narrative: React.FC<Props> = ({ data, onChange, onNext, onBack
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <Slider id="pace" label="Ritmo (Pace)" hint=" — velocidad narrativa"
-          value={data.pace} onChange={(v) => onChange({ pace: v })} />
+          value={data.pace} onChange={(v) => onChange({ pace: v })}
+          tooltip="Velocidad de la historia. Afecta el respeto al libreto." />
         <Slider id="plotTwists" label="Giros de Trama (Plot Twists)" hint=" — densidad de sorpresas"
-          value={data.plotTwists} onChange={(v) => onChange({ plotTwists: v })} />
+          value={data.plotTwists} onChange={(v) => onChange({ plotTwists: v })}
+          tooltip="Aumenta el atractivo crítico, pero exige alto Perfeccionismo del director." />
         <Slider id="subplots" label="Subtramas (Sub-plots)" hint=" — complejidad narrativa"
-          value={data.subplots} onChange={(v) => onChange({ subplots: v })} />
+          value={data.subplots} onChange={(v) => onChange({ subplots: v })}
+          tooltip="Añade capas dramáticas. Aumenta la exigencia de Perfeccionismo del director." />
         <Slider id="storyScope" label="Alcance de la Historia (Story Scope)" hint=" — ambición escalar"
-          value={data.storyScope} onChange={(v) => onChange({ storyScope: v })} />
+          value={data.storyScope} onChange={(v) => onChange({ storyScope: v })}
+          tooltip="Escala de producción. Requiere alto Set Design (Diseño de Sets) para evitar castigo de crítica." />
         <Slider id="charDevelopment" label="Desarrollo de Personajes" hint=" — profundidad actoral"
-          value={data.charDevelopment} onChange={(v) => onChange({ charDevelopment: v })} />
+          value={data.charDevelopment} onChange={(v) => onChange({ charDevelopment: v })}
+          tooltip="Profundidad dramática. Se multiplica por la Presencia en Pantalla del cast para agradar a los críticos." />
       </div>
 
       {/* Insight box */}
