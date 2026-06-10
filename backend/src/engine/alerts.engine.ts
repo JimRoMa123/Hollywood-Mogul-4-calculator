@@ -6,6 +6,9 @@ import {
 } from '../history/entities/calculation.entity';
 import { TECHNICAL_GENRES } from './financial.engine';
 
+// Helper: convert 1-5 star to 0-100 scale
+const s2p = (stars: number): number => Math.min(100, Math.max(0, (stars / 5) * 100));
+
 @Injectable()
 export class AlertsEngine {
   generate(
@@ -20,14 +23,67 @@ export class AlertsEngine {
     const alerts: AlertItem[] = [];
     const recommendations: Recommendation[] = [];
 
-    const avgHumility =
-      dto.castData.length > 0
-        ? dto.castData.reduce((acc, c) => acc + c.humility, 0) /
-          dto.castData.length
-        : 50;
-    const totalVfxPct = dto.vfxBudgetPct + dto.creatureFxPct;
+    const {
+      castData,
+      director,
+      budget,
+      marketingBudget,
+      hasAdditionalVillains,
+      studioCash,
+      preProduction,
+      productionCrew,
+      postProduction,
+      writer,
+      movieRating,
+      storyScope,
+      genre,
+      hasNudity,
+      franchiseMode,
+      franchiseMomentum,
+      pace,
+      subplots,
+    } = dto;
 
-    // ── Critical: Bankruptcy risk (§6.1)
+    const dirPerfectionism = s2p(director.perfectionist);
+    const dirEffects = s2p(director.effects);
+    const dirOnBudget = s2p(director.onBudget);
+
+    const avgHumility =
+      castData.length > 0
+        ? castData.reduce((acc, c) => acc + s2p(c.humility), 0) / castData.length
+        : 50;
+
+    const avgSexAppeal =
+      castData.length > 0
+        ? castData.reduce((acc, c) => acc + s2p(c.sexAppeal), 0) / castData.length
+        : 50;
+
+    // Production phase costs & technical check
+    const preCost =
+      preProduction.costumeDesignTeamCost * preProduction.costumeDesignMonths +
+      preProduction.setDesignTeamCost * preProduction.setDesignMonths;
+
+    const prodCost =
+      productionCrew.crewCost * productionCrew.crewMonths +
+      productionCrew.stuntTeamCost * productionCrew.stuntMonths +
+      productionCrew.makeUpDesignTeamCost * productionCrew.makeUpMonths +
+      productionCrew.practicalEffectsCost * productionCrew.practicalEffectsMonths +
+      productionCrew.creatureEffectsCost * productionCrew.creatureEffectsMonths;
+
+    const postCost =
+      postProduction.postProductionTeamCost * postProduction.editingMonths +
+      postProduction.vfxCompanyCost * postProduction.vfxMonths;
+
+    const totalProdCost = preCost + prodCost + postCost;
+
+    // VFX/Technical percentage estimation
+    const vfxInvestment =
+      postCost +
+      productionCrew.practicalEffectsCost * productionCrew.practicalEffectsMonths +
+      productionCrew.creatureEffectsCost * productionCrew.creatureEffectsMonths;
+    const totalTechnicalPct = budget > 0 ? (vfxInvestment / budget) * 100 : 0;
+
+    // ── Critical: Bankruptcy risk
     if (extras.bankruptcyRisk) {
       alerts.push({
         level: 'critical',
@@ -37,32 +93,32 @@ export class AlertsEngine {
       });
     }
 
-    // ── Critical: VFX waste (§3.2, §4.2)
-    if (totalVfxPct > 25 && dto.dirEffects < 50) {
+    // ── Critical: VFX waste
+    if (totalTechnicalPct > 25 && dirEffects < 50) {
       alerts.push({
         level: 'critical',
         code: 'VFX_WASTE',
-        message: `🎬 DESPERDICIO TÉCNICO: ${totalVfxPct}% del budget en efectos visuales con un director con solo ${dto.dirEffects}/100 en "Manejo de Efectos". Esta inversión será drenada como desperdicio de producción.`,
+        message: `🎬 DESPERDICIO TÉCNICO: ${totalTechnicalPct.toFixed(0)}% del budget en efectos visuales con un director con solo ${director.effects}/5 en "Manejo de Efectos". Esta inversión será drenada como desperdicio de producción.`,
       });
       recommendations.push({
         category: 'Director',
         action: 'WARNING',
         message:
-          'Reemplaza al director con alguien que tenga Manejo de Efectos > 70, o reduce el VFX budget a menos del 15%.',
+          'Reemplaza al director con alguien que tenga Manejo de Efectos > 70 (3.5+ estrellas), o reduce el VFX budget a menos del 15%.',
       });
     }
 
-    // ── Critical: Marketing over-saturation (§5.3)
-    if (dto.marketingBudget > extras.marketingEfficiencyPoint * 2) {
+    // ── Critical: Marketing over-saturation
+    if (marketingBudget > extras.marketingEfficiencyPoint * 2) {
       alerts.push({
         level: 'critical',
         code: 'MARKETING_OVERKILL',
-        message: `📢 SATURACIÓN DE MARKETING: Tu presupuesto publicitario ($${(dto.marketingBudget / 1e6).toFixed(1)}M) supera el doble del punto óptimo ($${(extras.marketingEfficiencyPoint / 1e6).toFixed(1)}M). Estás quemando capital en rendimientos negativos.`,
+        message: `📢 SATURACIÓN DE MARKETING: Tu presupuesto publicitario ($${(marketingBudget / 1e6).toFixed(1)}M) supera el doble del punto óptimo ($${(extras.marketingEfficiencyPoint / 1e6).toFixed(1)}M). Estás quemando capital en rendimientos negativos.`,
       });
     }
 
-    // ── Warning: Director-Cast conflict (§4.3)
-    const tension = Math.abs(dto.dirPerfectionism - avgHumility);
+    // ── Warning: Director-Cast conflict
+    const tension = Math.abs(dirPerfectionism - avgHumility);
     if (tension > 40 && tension <= 60) {
       alerts.push({
         level: 'warning',
@@ -71,7 +127,7 @@ export class AlertsEngine {
       });
     }
 
-    // ── Warning: Lightning in a bottle (§4.3)
+    // ── Warning: Lightning in a bottle
     if (extras.lightningInBottle) {
       alerts.push({
         level: 'warning',
@@ -80,17 +136,19 @@ export class AlertsEngine {
       });
     }
 
-    // ── Warning: Story Scope vs Set Design (§3.1, §3.2)
-    if (dto.storyScope > 70 && dto.setDesignPct < 15) {
+    // ── Warning: Story Scope vs Set Design
+    const storyScopeP = s2p(storyScope);
+    const setDesignPct = s2p(preProduction.setDesign);
+    if (storyScopeP > 70 && setDesignPct < 30) {
       alerts.push({
         level: 'warning',
         code: 'SCOPE_SET_MISMATCH',
-        message: `🎭 ALCANCE SIN PRODUCCIÓN: Story Scope de ${dto.storyScope}/100 requiere Set Design robusto. Con solo ${dto.setDesignPct}% asignado, el espectador percibirá la película como visualmente inferior al guion.`,
+        message: `🎭 ALCANCE SIN PRODUCCIÓN: Story Scope de ${storyScope}/5 estrellas requiere Set Design robusto. Con el set asignado actual, el espectador percibirá la película como visualmente inferior al guion.`,
       });
     }
 
-    // ── Warning: Nudity cascade (§6.3)
-    if (dto.hasNudity) {
+    // ── Warning: Nudity cascade
+    if (hasNudity) {
       alerts.push({
         level: 'warning',
         code: 'NUDITY_CASCADE',
@@ -99,9 +157,52 @@ export class AlertsEngine {
       });
     }
 
-    // ── Info: Talent inflation warning (§5.2)
-    const hasLowSalaryHighPerformers = dto.castData.some(
-      (c) => c.salary < 100000 && c.screenPresence > 80,
+    // ── Warning: Production cost overrun
+    if (totalProdCost > budget) {
+      alerts.push({
+        level: 'warning',
+        code: 'PRODUCTION_OVERRUN',
+        message: `🚨 Costos de producción ($${(totalProdCost / 1e6).toFixed(1)}M) superan el presupuesto asignado ($${(budget / 1e6).toFixed(1)}M).`,
+      });
+    }
+
+    // ── Writer warning
+    const writerAvg =
+      (s2p(writer.storyScopeDepth) +
+        s2p(writer.characterDevelopment) +
+        s2p(writer.intelligence) +
+        s2p(writer.dialogue) +
+        s2p(writer.pace)) /
+      5;
+    if (writerAvg < 40) {
+      alerts.push({
+        level: 'warning',
+        code: 'WEAK_WRITER',
+        message: '✍️ Escritor débil: El guion limitará toda la producción.',
+      });
+    }
+
+    // ── Parental rating restrictiveness
+    if (movieRating.parentalGuidanceAge >= 17) {
+      alerts.push({
+        level: 'warning',
+        code: 'RATED_R',
+        message: '🔞 Clasificación R (17+): Audiencia masivamente restringida.',
+      });
+    }
+
+    // ── Director minimum budget requirement
+    if (director.minBudgetRequirement > 0 && budget < director.minBudgetRequirement) {
+      alerts.push({
+        level: 'critical',
+        code: 'DIRECTOR_BUDGET_REQ',
+        message: `🎬 Director exige presupuesto mínimo de $${(director.minBudgetRequirement / 1e6).toFixed(1)}M.`,
+      });
+    }
+
+    // ── Info: Talent inflation warning
+    const hasLowSalaryHighPerformers = castData.some(
+      (c) => c.salary < 100000 && s2p(c.screenPresence) > 80,
     );
     if (hasLowSalaryHighPerformers) {
       alerts.push({
@@ -118,9 +219,9 @@ export class AlertsEngine {
       });
     }
 
-    // ── Backend points recommendation (§5.1)
+    // ── Backend points recommendation
     const isAwardsPursuer =
-      dto.dirPerfectionism > 70 && dto.pace < 50 && dto.subplots > 60;
+      dirPerfectionism > 70 && s2p(pace) < 50 && s2p(subplots) > 60;
     if (isAwardsPursuer) {
       recommendations.push({
         category: 'Contratos Financieros',
@@ -128,7 +229,7 @@ export class AlertsEngine {
         message:
           'ACEPTA puntos en el backend (backend points): Tu película está configurada para premios, no para taquilla masiva. Pagarás mucho menos en salarios y ahorrarás millones en gastos iniciales.',
       });
-    } else if (TECHNICAL_GENRES.includes(dto.genre) && dto.budget > 50000000) {
+    } else if (TECHNICAL_GENRES.includes(genre) && budget > 50000000) {
       recommendations.push({
         category: 'Contratos Financieros',
         action: 'DENY',
@@ -137,8 +238,8 @@ export class AlertsEngine {
       });
     }
 
-    // ── Streaming recommendation (§7.2)
-    if (dto.studioCash < dto.budget * 3 && dto.distributionMode === 'cinema') {
+    // ── Streaming recommendation
+    if (studioCash < budget * 3 && dto.distributionMode === 'cinema') {
       recommendations.push({
         category: 'Distribución',
         action: 'OPTIMIZE',
@@ -147,14 +248,14 @@ export class AlertsEngine {
       });
     }
 
-    // ── Family merchandising opportunity (§8.3)
+    // ── Family merchandising opportunity
     const isFamilyContent = [
       'Family',
       'Animation',
       'Comedy',
       'Musical',
-    ].includes(dto.genre);
-    if (isFamilyContent && !dto.hasNudity) {
+    ].includes(genre);
+    if (isFamilyContent && !hasNudity) {
       recommendations.push({
         category: 'Revenue Streams',
         action: 'ACCEPT',
@@ -163,8 +264,8 @@ export class AlertsEngine {
       });
     }
 
-    // ── Demographic risk warning (§4.1)
-    dto.castData.forEach((actor) => {
+    // ── Demographic risk warning
+    castData.forEach((actor) => {
       if (actor.age >= 38 && actor.age <= 42) {
         alerts.push({
           level: 'info',

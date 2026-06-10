@@ -1173,3 +1173,392 @@ input[type="range"]::-webkit-slider-thumb:hover {
   border: 1px solid rgba(255, 140, 66, 0.15);
 }
 
+/* ── Star Rating Component ── */
+.star-rating-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.star-rating-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.star-rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 2px;
+  line-height: 1;
+}
+
+.star-btn.filled {
+  color: var(--gold);
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+.star-btn.empty {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+  color: var(--gold-light);
+}
+
+.star-rating-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-left: 8px;
+  min-width: 24px;
+}
+
+.star-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.star-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+/* ── Step Progress Wrapper (scrollable for 10 steps) ── */
+.step-progress-wrapper {
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.step-progress-wrapper::-webkit-scrollbar {
+  height: 3px;
+}
+
+.step-progress-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 2px;
+}
+
+.step-progress {
+  min-width: 700px;
+}
+
+.step-item {
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.step-item:hover { opacity: 0.8; }
+
+.step-item.current .step-circle {
+  border-color: var(--gold);
+  color: var(--bg-primary);
+  background: var(--gold);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+.step-item.current .step-label {
+  color: var(--gold);
+}
+
+.step-item.completed .step-circle {
+  border-color: var(--green-success);
+  color: var(--green-success);
+  background: var(--green-dim);
+}
+
+.step-item.completed .step-label {
+  color: var(--green-success);
+}
+
+/* ── Section Block ── */
+.section-block {
+  margin-bottom: 28px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.section-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-block-inner {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+}
+
+.subsection-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Role Cards ── */
+.roles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.role-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+
+.role-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.role-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.role-number {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.role-type-label {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.role-main-tag {
+  font-size: 0.7rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ── Production Phase Cards ── */
+.production-phase-card {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+}
+
+.phase-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+.phase-total {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.phase-total-amount {
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.phase-subtotal {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.phase-subtotal span {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* ── Market Cards (Marketing Campaign) ── */
+.markets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.market-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.market-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.market-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ── Runtime Selector ── */
+.runtime-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.runtime-btn {
+  padding: 8px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.runtime-btn:hover {
+  border-color: var(--border-gold);
+  color: var(--gold);
+}
+
+.runtime-btn.active {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ── PG Age Selector ── */
+.pg-age-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pg-age-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.pg-age-btn:hover { border-color: var(--border-gold); }
+
+.pg-age-btn.active {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.pg-age-btn.restrictive.active {
+  border-color: var(--red-danger);
+  background: var(--red-dim);
+}
+
+.pg-age-number {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pg-age-btn.active .pg-age-number { color: var(--gold); }
+.pg-age-btn.restrictive.active .pg-age-number { color: var(--red-danger); }
+
+.pg-age-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ── Tracks Grid ── */
+.tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+/* ── Textarea ── */
+textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  width: 100%;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+textarea:focus {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.05);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* ── Distribution grid responsive for 2 items ── */
+@media (max-width: 768px) {
+  .distribution-grid { grid-template-columns: 1fr; }
+  .pg-age-selector { grid-template-columns: repeat(3, 1fr); }
+  .star-grid { grid-template-columns: 1fr; }
+  .star-grid-compact { grid-template-columns: repeat(2, 1fr); }
+}
+

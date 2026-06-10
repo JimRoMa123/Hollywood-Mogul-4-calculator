@@ -1,14 +1,15 @@
 import React from 'react';
-import { MovieFormData } from '../../types/calculator.types';
+import type { MovieFormData } from '../../types/calculator.types';
 import { MoneyInput } from './FormComponents';
 
 interface Props {
   data: MovieFormData;
   onChange: (updates: Partial<MovieFormData>) => void;
   onNext: () => void;
+  onBack: () => void;
 }
 
-export const Step1Finances: React.FC<Props> = ({ data, onChange, onNext }) => {
+export const Step2Finances: React.FC<Props> = ({ data, onChange, onNext, onBack }) => {
   const totalSpend = data.budget + data.marketingBudget;
   const remainingCash = data.studioCash - totalSpend;
   const isHealthy = remainingCash > data.budget * 0.25;
@@ -104,9 +105,9 @@ export const Step1Finances: React.FC<Props> = ({ data, onChange, onNext }) => {
       )}
 
       <div className="step-nav">
-        <div />
+        <button className="btn btn-secondary" onClick={onBack}>← Setup</button>
         <button className="btn btn-primary" onClick={onNext}>
-          Siguiente: Narrativo →
+          Siguiente: Storytelling →
         </button>
       </div>
     </div>

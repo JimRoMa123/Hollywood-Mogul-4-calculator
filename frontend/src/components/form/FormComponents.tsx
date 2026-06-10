@@ -1,5 +1,48 @@
 import React from 'react';
+import type { StarRating } from '../../types/calculator.types';
 
+// ===== Star Rating (clickable, 1-5) =====
+interface StarRatingInputProps {
+  label: string;
+  hint?: string;
+  value: StarRating;
+  max?: 3 | 5;
+  onChange: (val: StarRating) => void;
+  id: string;
+  tooltip?: string;
+}
+
+export const StarRatingInput: React.FC<StarRatingInputProps> = ({
+  label, hint, value, max = 5, onChange, id, tooltip,
+}) => {
+  return (
+    <div className="star-rating-group">
+      <div className="star-rating-label-row">
+        <label htmlFor={id} style={{ fontSize: '0.82rem', fontWeight: 500, color: 'var(--text-secondary)' }}>
+          {label}
+          {hint && <span className="label-hint">{hint}</span>}
+        </label>
+      </div>
+      <div className="star-rating-stars" id={id}>
+        {Array.from({ length: max }, (_, i) => i + 1).map((star) => (
+          <button
+            key={star}
+            type="button"
+            className={`star-btn ${star <= value ? 'filled' : 'empty'}`}
+            onClick={() => onChange(star as StarRating)}
+            aria-label={`${star} star${star > 1 ? 's' : ''}`}
+          >
+            ★
+          </button>
+        ))}
+        <span className="star-rating-text">{value}/{max}</span>
+      </div>
+      {tooltip && <div className="input-tooltip-text" style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px', lineHeight: '1.4' }}>{tooltip}</div>}
+    </div>
+  );
+};
+
+// ===== Slider (keep for percentage/money sliders) =====
 interface SliderProps {
   label: string;
   hint?: string;
@@ -55,6 +98,7 @@ export const Slider: React.FC<SliderProps> = ({
   );
 };
 
+// ===== Money Input =====
 interface MoneyInputProps {
   label: string;
   hint?: string;
@@ -96,6 +140,7 @@ export const MoneyInput: React.FC<MoneyInputProps> = ({ label, hint, value, onCh
   </div>
 );
 
+// ===== Toggle =====
 interface ToggleProps {
   label: string;
   description?: string;
@@ -112,5 +157,60 @@ export const Toggle: React.FC<ToggleProps> = ({ label, description, checked, onC
     <div className={`toggle-switch ${checked ? 'on' : ''}`}>
       <div className="toggle-knob" />
     </div>
+  </div>
+);
+
+// ===== Select Dropdown =====
+interface SelectProps {
+  label: string;
+  hint?: string;
+  value: string;
+  options: string[];
+  onChange: (val: string) => void;
+  id: string;
+  placeholder?: string;
+  required?: boolean;
+}
+
+export const Select: React.FC<SelectProps> = ({ label, hint, value, options, onChange, id, placeholder, required = false }) => (
+  <div className="form-group">
+    <label htmlFor={id}>
+      {label}
+      {hint && <span className="label-hint">{hint}</span>}
+    </label>
+    <select id={id} value={value} onChange={(e) => onChange(e.target.value)}>
+      {!required && <option value="">{placeholder || '— Selecciona —'}</option>}
+      {options.map(o => <option key={o} value={o}>{o}</option>)}
+    </select>
+  </div>
+);
+
+// ===== Number Input =====
+interface NumberInputProps {
+  label: string;
+  hint?: string;
+  value: number;
+  min?: number;
+  max?: number;
+  onChange: (val: number) => void;
+  id: string;
+  tooltip?: string;
+}
+
+export const NumberInput: React.FC<NumberInputProps> = ({ label, hint, value, min, max, onChange, id, tooltip }) => (
+  <div className="form-group">
+    <label htmlFor={id}>
+      {label}
+      {hint && <span className="label-hint">{hint}</span>}
+    </label>
+    <input
+      id={id}
+      type="number"
+      min={min}
+      max={max}
+      value={value || ''}
+      onChange={(e) => onChange(Number(e.target.value))}
+    />
+    {tooltip && <div className="input-tooltip-text" style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px', lineHeight: '1.4' }}>{tooltip}</div>}
   </div>
 );

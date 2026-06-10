@@ -36,6 +36,10 @@ export class CalculatorService {
     // Save to database
     const calculation = this.calculationRepo.create({
       ...dto,
+      dirPerfectionism: dto.director?.perfectionist,
+      dirScriptFidelity: dto.director?.scriptAsWritten,
+      dirOnBudget: dto.director?.onBudget,
+      dirEffects: dto.director?.effects,
       franchiseMode: dto.franchiseMode ?? false,
       franchiseMomentum: dto.franchiseMomentum ?? 0,
       fbp: financial.fbp,

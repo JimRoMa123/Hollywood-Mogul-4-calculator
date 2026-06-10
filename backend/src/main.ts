@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -20,6 +20,38 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: false,
       transform: true,
+      exceptionFactory: (errors) => {
+        // Clean errors by recursively stripping target property to avoid massive logs
+        const stripTarget = (errs: any[]): any[] => {
+          return errs.map((err) => {
+            const { target, ...rest } = err;
+            if (rest.children && rest.children.length > 0) {
+              rest.children = stripTarget(rest.children);
+            }
+            return rest;
+          });
+        };
+        console.error(
+          '❌ Validation Errors:',
+          JSON.stringify(stripTarget(errors), null, 2),
+        );
+
+        const getConstraints = (error: any): string[] => {
+          const list: string[] = [];
+          if (error.constraints) {
+            list.push(...Object.values(error.constraints));
+          }
+          if (error.children) {
+            for (const child of error.children) {
+              list.push(...getConstraints(child));
+            }
+          }
+          return list;
+        };
+
+        const messages = errors.map(getConstraints).flat();
+        return new BadRequestException(messages);
+      },
     }),
   );
 

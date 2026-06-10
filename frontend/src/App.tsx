@@ -1,42 +1,193 @@
 import { useState } from 'react';
-import { MovieFormData, CalculationResult } from './types/calculator.types';
+import type { MovieFormData, CalculationResult } from './types/calculator.types';
 import { StepProgress } from './components/layout/StepProgress';
-import { Step1Finances } from './components/form/Step1_Finances';
-import { Step2Narrative } from './components/form/Step2_Narrative';
-import { Step3Technical } from './components/form/Step3_Technical';
-import { Step4Talent } from './components/form/Step4_Talent';
-import { Step5Distribution } from './components/form/Step5_Distribution';
+import { Step1ProjectSetup } from './components/form/Step1_ProjectSetup';
+import { Step2Finances } from './components/form/Step2_Finances';
+import { Step3Storytelling } from './components/form/Step3_Storytelling';
+import { Step4MovieRating } from './components/form/Step4_MovieRating';
+import { Step5Roles } from './components/form/Step5_Roles';
+import { Step6Writer } from './components/form/Step6_Writer';
+import { Step7DirectorAndTalent } from './components/form/Step7_DirectorAndTalent';
+import { Step8Production } from './components/form/Step8_Production';
+import { Step9SoundtrackAndRuntime } from './components/form/Step9_SoundtrackAndRuntime';
+import { Step10MarketingAndDistribution } from './components/form/Step10_MarketingAndDistribution';
 import { ResultsDashboard } from './components/results/ResultsDashboard';
 import { HistoryList } from './components/history/HistoryList';
 import { calculateMovie } from './api/calculatorApi';
 import { calculateLiveMetrics } from './utils/calculatorEngine';
 
+const TOTAL_STEPS = 10;
+
 const DEFAULT_FORM: MovieFormData = {
+  // Step 1: Project Setup
+  projectType: 'Movie',
+  releaseType: 'Theatrical Release',
+  productionType: 'Live Action',
+  franchiseQualified: false,
+  franchise: false,
+  universe: '',
+
+  // Step 2: Finances
   movieTitle: '',
   budget: 20000000,
   marketingBudget: 4000000,
   studioCash: 60000000,
+
+  // Step 3: Storytelling
+  productionGenre: '',
   genre: '',
   subgenre: '',
-  pace: 50,
-  plotTwists: 50,
-  subplots: 40,
-  storyScope: 50,
-  charDevelopment: 50,
-  vfxBudgetPct: 15,
-  creatureFxPct: 5,
-  stuntsPct: 5,
-  setDesignPct: 10,
-  dirPerfectionism: 60,
-  dirScriptFidelity: 60,
-  dirOnBudget: 60,
-  dirEffects: 50,
+  isMusical: false,
+  hasCreatures: false,
+  storyScope: 3,
+  charDevelopment: 3,
+  intelligence: 3,
+  dialogue: 3,
+  pace: 3,
+  plotTwists: 3,
+  subplots: 3,
+  era: 'Present Day',
+  additionalVillain: 'None',
+  storyEnding: 'Happy',
+  basedOnTrueStory: false,
+  primaryAudience: '',
+  secondaryAudience: '',
+
+  // Step 4: Movie Rating
+  movieRating: {
+    parentalGuidanceAge: 0,
+    language: 1,
+    violence: 1,
+    sensuality: 1,
+    fear: 1,
+    jumpScares: 1,
+    gore: 1,
+    controversy: 1,
+  },
+
+  // Step 5: Roles
+  roles: [{
+    roleType: 'Main Character',
+    roleDifficulty: 3,
+    species: 'Human',
+    gender: 'Male',
+    characterDies: false,
+    descriptor: '',
+    characterAge: 30,
+    characterName: '',
+    performanceType: 'Live Action',
+    performanceFocus: 'Action',
+    persona: 'Average',
+    stunts: 1,
+    makeUpEffects: 1,
+    loveScenes: 1,
+    characterDescription: '',
+  }],
+
+  // Step 6: Writer
+  writer: {
+    name: '',
+    salary: 500000,
+    age: 35,
+    storyScopeDepth: 3,
+    characterDevelopment: 3,
+    intelligence: 3,
+    dialogue: 3,
+    pace: 3,
+    timeToCompleteMonths: 4,
+  },
+
+  // Step 7: Director + Talent
+  director: {
+    name: '',
+    salary: 2000000,
+    age: 40,
+    actionSkill: 3,
+    comedySkill: 3,
+    dramaSkill: 3,
+    authority: 3,
+    storySense: 3,
+    epicStorySense: 3,
+    onBudget: 3,
+    genreSpecialty: 'None',
+    genreProficiency: 3,
+    effects: 3,
+    perfectionist: 3,
+    scriptAsWritten: 3,
+    minBudgetRequirement: 0,
+    finalCut: false,
+  },
   castData: [],
-  hasNudity: false,
-  hasAdditionalVillains: false,
+
+  // Step 8: Production
+  preProduction: {
+    costumeDesignTeamRating: 3,
+    costumeDesignTeamCost: 1200000,
+    costumeDesign: 3,
+    costumeDesignMonths: 1,
+    setDesignTeamRating: 3,
+    setDesignTeamCost: 1200000,
+    setDesign: 3,
+    setDesignMonths: 1,
+  },
+  productionCrew: {
+    filmType: 'Color',
+    crewRating: 3,
+    crewCost: 6000000,
+    crewMonths: 1,
+    stuntTeamRating: 3,
+    stuntTeamCost: 1800000,
+    stunts: 1,
+    stuntMonths: 0,
+    makeUpDesignTeamRating: 3,
+    makeUpDesignTeamCost: 0,
+    makeUpEffects: 1,
+    makeUpMonths: 0,
+    practicalEffectsCompanyRating: 3,
+    practicalEffectsCost: 0,
+    practicalEffects: 1,
+    practicalEffectsMonths: 0,
+    creatureEffectsCompanyRating: 3,
+    creatureEffectsCost: 0,
+    creatureEffects: 1,
+    creatureEffectsMonths: 0,
+  },
+  postProduction: {
+    postProductionTeamRating: 3,
+    postProductionTeamCost: 3000000,
+    editingMonths: 1,
+    vfxCompanyRating: 3,
+    vfxCompanyCost: 0,
+    visualEffects: 1,
+    vfxMonths: 0,
+  },
+
+  // Step 9: Soundtrack & Runtime
+  soundtrack: {
+    hasSoundtrack: false,
+    recordingArtistStature: 3,
+    tracks: Array(12).fill(''),
+    musicClearanceRights: 0,
+    recordCompanyPercent: 0,
+  },
+  runningTimeMinutes: 120,
+
+  // Step 10: Marketing & Distribution
   distributionMode: 'cinema',
   franchiseMode: false,
   franchiseMomentum: 0,
+  hasNudity: false,
+  hasAdditionalVillains: false,
+  marketingCampaign: {
+    globalFocus: 'None',
+    markets: [
+      { marketName: 'Domestic (USA)', focus: 'None', televisionAds: 0, deviceVideoAds: 0, deviceBannerAds: 0, events: 0, crossPromotions: 0 },
+      { marketName: 'UK & Ireland', focus: 'None', televisionAds: 0, deviceVideoAds: 0, deviceBannerAds: 0, events: 0, crossPromotions: 0 },
+      { marketName: 'Europe', focus: 'None', televisionAds: 0, deviceVideoAds: 0, deviceBannerAds: 0, events: 0, crossPromotions: 0 },
+      { marketName: 'Asia Pacific', focus: 'None', televisionAds: 0, deviceVideoAds: 0, deviceBannerAds: 0, events: 0, crossPromotions: 0 },
+      { marketName: 'Latin America', focus: 'None', televisionAds: 0, deviceVideoAds: 0, deviceBannerAds: 0, events: 0, crossPromotions: 0 },
+    ],
+  },
 };
 
 type View = 'calculator' | 'history';
@@ -128,7 +279,7 @@ function LivePreview({ form }: { form: MovieFormData }) {
         <div className="preview-warnings-title">Alertas Predictivas ({metrics.warnings.length})</div>
         {metrics.warnings.length > 0 ? (
           <div className="preview-warnings-list">
-            {metrics.warnings.map((warn, i) => (
+            {metrics.warnings.map((warn: string, i: number) => (
               <div className="preview-warning-item" key={i}>
                 {warn}
               </div>
@@ -162,9 +313,13 @@ function App() {
     try {
       const res = await calculateMovie(form);
       setResult(res);
-      setStep(6); // results view
-    } catch (e) {
-      setError('Error al conectar con el servidor. ¿Está corriendo el backend en puerto 3001?');
+      setStep(TOTAL_STEPS + 1); // results view
+    } catch (e: any) {
+      if (e.response && e.response.status === 400 && e.response.data && Array.isArray(e.response.data.message)) {
+        setError('Errores de validación:\n' + e.response.data.message.join('\n'));
+      } else {
+        setError('Error al conectar con el servidor. ¿Está corriendo el backend en puerto 3001?');
+      }
       console.error(e);
     } finally {
       setLoading(false);
@@ -176,6 +331,8 @@ function App() {
     setStep(1);
     setForm(DEFAULT_FORM);
   };
+
+  const isResultsView = step > TOTAL_STEPS;
 
   return (
     <>
@@ -213,9 +370,9 @@ function App() {
             <HistoryList />
           </div>
         ) : (
-          <div className={step < 6 ? "calculator-layout" : ""}>
-            <div className={step < 6 ? "calculator-form-side" : ""}>
-              {step < 6 && (
+          <div className={!isResultsView ? "calculator-layout" : ""}>
+            <div className={!isResultsView ? "calculator-form-side" : ""}>
+              {!isResultsView && (
                 <StepProgress
                   currentStep={step}
                   onStepClick={(s) => s < step && setStep(s)}
@@ -230,38 +387,67 @@ function App() {
                   borderRadius: 'var(--radius-md)',
                   color: '#ff8095', fontSize: '0.9rem',
                 }}>
-                  🚨 {error}
+                  <strong>🚨 Error:</strong>
+                  {error.includes('\n') ? (
+                    <ul style={{ marginTop: 8, paddingLeft: 20, lineHeight: 1.6, textAlign: 'left' }}>
+                      {error.split('\n').slice(1).map((err, i) => (
+                        <li key={i}>{err}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span> {error}</span>
+                  )}
                 </div>
               )}
 
               {step === 1 && (
-                <Step1Finances data={form} onChange={updateForm} onNext={() => setStep(2)} />
+                <Step1ProjectSetup data={form} onChange={updateForm} onNext={() => setStep(2)} />
               )}
               {step === 2 && (
-                <Step2Narrative data={form} onChange={updateForm}
+                <Step2Finances data={form} onChange={updateForm}
                   onNext={() => setStep(3)} onBack={() => setStep(1)} />
               )}
               {step === 3 && (
-                <Step3Technical data={form} onChange={updateForm}
+                <Step3Storytelling data={form} onChange={updateForm}
                   onNext={() => setStep(4)} onBack={() => setStep(2)} />
               )}
               {step === 4 && (
-                <Step4Talent data={form} onChange={updateForm}
+                <Step4MovieRating data={form} onChange={updateForm}
                   onNext={() => setStep(5)} onBack={() => setStep(3)} />
               )}
               {step === 5 && (
-                <Step5Distribution data={form} onChange={updateForm}
-                  onSubmit={handleSubmit} onBack={() => setStep(4)} loading={loading} />
+                <Step5Roles data={form} onChange={updateForm}
+                  onNext={() => setStep(6)} onBack={() => setStep(4)} />
+              )}
+              {step === 6 && (
+                <Step6Writer data={form} onChange={updateForm}
+                  onNext={() => setStep(7)} onBack={() => setStep(5)} />
+              )}
+              {step === 7 && (
+                <Step7DirectorAndTalent data={form} onChange={updateForm}
+                  onNext={() => setStep(8)} onBack={() => setStep(6)} />
+              )}
+              {step === 8 && (
+                <Step8Production data={form} onChange={updateForm}
+                  onNext={() => setStep(9)} onBack={() => setStep(7)} />
+              )}
+              {step === 9 && (
+                <Step9SoundtrackAndRuntime data={form} onChange={updateForm}
+                  onNext={() => setStep(10)} onBack={() => setStep(8)} />
+              )}
+              {step === 10 && (
+                <Step10MarketingAndDistribution data={form} onChange={updateForm}
+                  onSubmit={handleSubmit} onBack={() => setStep(9)} loading={loading} />
               )}
             </div>
 
-            {step < 6 && (
+            {!isResultsView && (
               <div className="calculator-preview-side">
                 <LivePreview form={form} />
               </div>
             )}
 
-            {step === 6 && result && (
+            {isResultsView && result && (
               <ResultsDashboard result={result} onRecalculate={handleRecalculate} />
             )}
           </div>

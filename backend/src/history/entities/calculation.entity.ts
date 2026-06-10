@@ -12,6 +12,18 @@ export interface CastMember {
   screenPresence: number;
   humility: number;
   age: number;
+  actionSkill?: number;
+  comedySkill?: number;
+  dramaSkill?: number;
+  singSkill?: number;
+  danceSkill?: number;
+  perfectionist?: number;
+  scriptAsWritten?: number;
+  persona?: string;
+  payOrPlay?: boolean;
+  points?: number;
+  bestKnownAs?: string;
+  wantsToTry?: string;
 }
 
 export interface AlertItem {
@@ -83,16 +95,16 @@ export class Calculation {
   setDesignPct: number;
 
   // Director
-  @Column({ type: 'smallint' })
+  @Column({ type: 'smallint', nullable: true })
   dirPerfectionism: number;
 
-  @Column({ type: 'smallint' })
+  @Column({ type: 'smallint', nullable: true })
   dirScriptFidelity: number;
 
-  @Column({ type: 'smallint' })
+  @Column({ type: 'smallint', nullable: true })
   dirOnBudget: number;
 
-  @Column({ type: 'smallint' })
+  @Column({ type: 'smallint', nullable: true })
   dirEffects: number;
 
   // Cast
