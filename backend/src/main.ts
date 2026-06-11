@@ -39,7 +39,7 @@ async function bootstrap() {
         const getConstraints = (error: any): string[] => {
           const list: string[] = [];
           if (error.constraints) {
-            list.push(...Object.values(error.constraints));
+            list.push(...(Object.values(error.constraints) as string[]));
           }
           if (error.children) {
             for (const child of error.children) {
